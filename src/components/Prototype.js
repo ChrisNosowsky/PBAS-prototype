@@ -1,16 +1,9 @@
 import React, { Component } from 'react'
+import chime from '../assets/Prototype/chimes.mp3'
 import warning from '../assets/Prototype/pslight.png'
+import warningTriangle from '../assets/Prototype/warning.png'
 import Header from './Header';
 import Footer from './Footer';
-
-// TODO: Add override message to brake when system messages say "Automatic braking system: on"
-// TODO: Add JS braking mechanism for pressing B
-// TODO: Add automatic braking mechanism to brake on override
-// TODO: Stop vehicle and frames and dont update messages to automatic braking if user presses "B" in time.
-// TODO: Add in flashing HUD
-// TODO: Add in warning triangle
-// TODO: Add in auditory chimes
-// TODO: Add in active safety on/off messages
 
 const options = [
     {
@@ -36,6 +29,9 @@ export class Prototype extends Component {
     
     constructor(props) {
         super(props);
+        this.audio = null;
+        this.intervalArr = [];
+        this.extraIntervalArr = [];
         this.state = {timer: null, speed: 0,
             background: "scenarioStart",
             engineToggled: false, reverse: false, maintenance: false, washed: false, objectDetected: false,
@@ -48,7 +44,9 @@ export class Prototype extends Component {
             automaticBraking: false,
             backupComplete: false,
             imminentCollision: false,
-            countdownTimer: 3,      
+            hudVisible: true,
+            userBrake: false,
+            countdownTimer: 5,      
             hidden: "hidden", start: "hidden", warning: false};
         this.resetScreen = this.resetScreen.bind(this);
         this.toggleEngine = this.toggleEngine.bind(this);
@@ -63,6 +61,8 @@ export class Prototype extends Component {
         this.startBackup = this.startBackup.bind(this)
         this.slowSpeed = this.slowSpeed.bind(this)
         this.countDown = this.countDown.bind(this)
+        this.onKeyDownHandler = this.onKeyDownHandler.bind(this)
+        this.stopIntervals = this.stopIntervals.bind(this)
     }
 
     resetScreen() {
@@ -70,6 +70,10 @@ export class Prototype extends Component {
         clearInterval ( this.state.timer );
         clearTimeout(this.state.timeoutId)
         clearInterval(this.state.intervalId)
+        this.stopIntervals();
+        this.stopExtraIntervals();
+        this.intervalArr = [];
+        this.extraIntervalArr = [];
         this.startTimer()
         this.setState({speed: 0,
             engineToggled: false, 
@@ -84,7 +88,9 @@ export class Prototype extends Component {
             backupComplete: false,
             automaticBraking: false,
             imminentCollision: false,
-            countdownTimer: 3,
+            userBrake: false,
+            hudVisible: true,
+            countdownTimer: 5,
             hidden: "hidden", start: "", warning: false})
         if (this.state.resetScenario === "scenario4") {
             this.setState({maintenance: true})
@@ -97,6 +103,20 @@ export class Prototype extends Component {
             this.setState({background: "scenario1backup1", scenario: "scenario1"})
         }, 2000);
         this.setState({timeoutId})
+    }
+
+    stopIntervals() {
+        for (const element of this.intervalArr) {
+            clearInterval(element);
+        }
+        this.intervalArr = [];
+    }
+
+    stopExtraIntervals() {
+        for (const element of this.extraIntervalArr) {
+            clearInterval(element);
+        }
+        this.extraIntervalArr = [];
     }
 
     startSimulation() {
@@ -114,6 +134,10 @@ export class Prototype extends Component {
 
     mainMenu() {
         clearInterval ( this.state.timer );
+        this.stopIntervals();
+        this.stopExtraIntervals();
+        this.intervalArr = [];
+        this.extraIntervalArr = [];
         this.setState({timer: null, speed: 0,
             background: "scenarioStart",
             scenario: "scenarioStart",
@@ -124,7 +148,9 @@ export class Prototype extends Component {
             backupComplete: false,
             imminentCollision: false,
             automaticBraking: false,
-            countdownTimer: 3,
+            userBrake: false,
+            countdownTimer: 5,
+            hudVisible: true,
             engineToggled: false, reverse: false, maintenance: false, 
             washed: false, objectDetected: false, activeSafety: false,
             hidden: "hidden", start: "hidden", warning: false});
@@ -142,10 +168,14 @@ export class Prototype extends Component {
 
     componentDidMount() {
         document.body.style.backgroundColor = "#252525";
+        this.audio = new Audio(chime)
+        this.audio.load()
+        document.addEventListener("keydown", this.onKeyDownHandler);
     }
 
     componentWillUnmount() {
         clearInterval ( this.state.timer );
+        this.removeEventListener("keydown", this.onKeyDownHandler);
     }
 
 
@@ -171,6 +201,9 @@ export class Prototype extends Component {
 
     handleChange(e) {
         let selectedOptionText = e.target.options[e.target.selectedIndex].text.slice(12)
+        if (e.target.value === "scenario2") {
+            selectedOptionText = e.target.options[e.target.selectedIndex].text.slice(14)
+        }
         this.setState( {resetScenario: e.target.value, scenario: e.target.value, scenarioMessage: selectedOptionText} );
     }
 
@@ -204,10 +237,15 @@ export class Prototype extends Component {
             }
          }, 300);
          this.setState({intervalId})
+         this.intervalArr.push(intervalId);
     }
 
     slowSpeed() {
         var time = 5;
+        var speed = 300;
+        if (this.state.automaticBraking) {
+            speed = 50;
+        }
         var intervalId = setInterval(() => { 
             if (time >= 0) {
                 this.setState({speed: time/10})
@@ -215,10 +253,20 @@ export class Prototype extends Component {
             }
             else { 
                 clearInterval(intervalId);
-                alert("Scenario Complete.")
+                this.audio.pause();
+                this.audio.currentTime = 0;
+                if (this.state.automaticBraking) {
+                    alert("Scenario Complete: Automatic braking took over and stopped vehicle in time.")
+                } else if (this.state.userBrake) {
+                    alert("Scenario Complete: User was able to successfully brake in time.")
+                } else {
+                    alert("Scenario Complete.")
+                }
+                this.setState({automaticBraking: false})
             }
-         }, 300);
+         }, speed);
          this.setState({intervalId})
+         this.intervalArr.push(intervalId);
     }
 
     updateSoftware() {
@@ -235,14 +283,28 @@ export class Prototype extends Component {
 
     startBackup() {
         var time = 2;
-        this.countDown()
+        if(this.state.scenario !== "scenario1") {
+            this.countDown()
+        }
         var intervalId = setInterval(() => { 
             if (time <= 5) {
                 if(this.state.scenario === "scenario1") {
                     this.setState({background: this.state.scenario + "backup" + time.toString()})
                 } else if (this.state.scenario === "scenario2") {
                     if (time === 3 && this.state.objectDetected) {
-                        this.setState({activeSafety: true, imminentCollision: true, automaticBraking: true})
+                        this.setState({activeSafety: true, imminentCollision: true}, () => {
+                            this.playAudio()
+                            var intervalId = setInterval(() => { 
+                                if (this.state.hudVisible) {
+                                    this.setState({hudVisible: false})
+                                }
+                                else { 
+                                    this.setState({hudVisible: true})
+                                }
+                             }, 300);
+                             this.setState({intervalId})
+                             this.extraIntervalArr.push(intervalId);
+                        })
                     }
                     this.setState({background: this.state.scenario + "object" + time.toString()})
                 }
@@ -256,20 +318,51 @@ export class Prototype extends Component {
             }
         }, 2000);
         this.setState({intervalId})
+        this.intervalArr.push(intervalId);
     }
 
     countDown() {
-        var time = 3;
+        var time = 5;
         var intervalId = setInterval(() => { 
-            if (time >= 1) {
+            if (time >= 0) {
+                if(time === 0) {
+                    this.setState({automaticBraking: true})
+                }
                 this.setState({countdownTimer: time})
                 time--;
             }
             else { 
                 clearInterval(intervalId);
             }
-        }, 1000);
+        }, 1500);
+        this.intervalArr.push(intervalId);
     }
+
+
+    playAudio() {
+        const audioPromise = this.audio.play()
+        if (audioPromise !== undefined) {
+          audioPromise
+            .then(_ => {
+            })
+            .catch(err => {
+              console.info(err)
+            })
+        }
+    }
+
+    onKeyDownHandler = e => {
+        if(this.state.objectDetected && !this.state.automaticBraking) {
+            if (e.keyCode === 66) {
+                console.log("User initiated brake")
+                this.setState({userBrake: true, backupComplete: true})
+                this.stopIntervals();
+                this.audio.pause()
+                this.audio.currentTime = 0;
+                this.slowSpeed();
+            }
+        }
+    };
 
     render() {
         let startSimButton;
@@ -301,8 +394,6 @@ export class Prototype extends Component {
         if (this.state.warning) {
             warningButton = <img className="warning-light" src={warning} alt="Warning Light"></img>
         }
-
-
 
         return (
             <div>
@@ -351,12 +442,30 @@ export class Prototype extends Component {
                         }
 
                         {
-                        (this.state.speed >= 0.5 && this.state.objectDetected) && 
+                        (this.state.speed >= 0.5 && this.state.objectDetected && !this.state.userBrake) && 
                             <div className="box5">
                                 <p className="warningCollisionWarning">WARNING</p>
                                 <p className="warningCollision">IMMINENT COLLISION AHEAD. PRESS "B" TO BRAKE</p>
-                                <p className="warningCollision2">{this.state.countdownTimer}</p>
+                                {this.state.countdownTimer === 0 ? (
+                                    <p className="warningCollision2">AUTOMATIC BRAKES ACTIVATED</p>
+                                ) : (
+                                    <p className="warningCollision2">{this.state.countdownTimer}</p>
+                                )}
+                                
                             </div>
+                        }
+
+                        {
+                        (this.state.imminentCollision) && 
+                        <div>
+                            {
+                            (this.state.hudVisible) &&
+                                <div className="box6">
+                                </div>
+                            }
+                            <img src={warningTriangle} className="warningTriangle" alt="Warning Triangle">
+                            </img>
+                        </div>
                         }
                         
 

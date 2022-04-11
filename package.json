@@ -24,7 +24,8 @@
     "react-scripts": "3.4.3",
     "react-scroll": "^1.8.1",
     "react-scroll-section": "^3.0.1",
-    "serve": "^13.0.2"
+    "serve": "^13.0.2",
+    "use-sound": "^4.0.1"
   },
   "scripts": {
     "dev": "react-scripts start",

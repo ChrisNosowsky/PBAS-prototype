@@ -240,6 +240,15 @@
     background: url(./assets/Prototype/prototypev1UpdateComplete.png) no-repeat 70% 0%;
 }
 
+.warningTriangle {
+    width: auto;
+    height: auto;
+    display: block;
+    max-width: 30px;
+    position: absolute;
+    top: 17.2em;
+    left: 69.5em;
+}
 
 .moveProt {
     margin-left: 20em;
@@ -543,7 +552,6 @@
     font-weight: 600;
 }
 
-
 .box {
     position: absolute;
     left: 64em;
@@ -579,13 +587,28 @@
 
 .box5 {
     position: absolute;
-    left: 30%;
-    bottom: 50%;
+    left: 22em;
+    bottom: 30em;
     background-color: #282828;
     opacity: 0.9;
     width: 33em;
     height: 8em;
+    z-index: 1;
+}
+
+.box6 {
+    position: absolute;
+    left: 31em;
+    top: 5.5em;
+    border: 3px solid rgba(255, 0, 0, .5);;
+    opacity: 0.9;
+    width: 5em;
+    height: 2em;
     z-index: 0;
+}
+
+.not-visible {
+    visibility: hidden;
 }
 
 .test-1 {
