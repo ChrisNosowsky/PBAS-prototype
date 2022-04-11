@@ -178,7 +178,6 @@ export class Prototype extends Component {
         this.removeEventListener("keydown", this.onKeyDownHandler);
     }
 
-
     toggleEngine() {
         if(this.state.engineToggled) {
             clearInterval(this.state.intervalId)
@@ -338,7 +337,6 @@ export class Prototype extends Component {
         this.intervalArr.push(intervalId);
     }
 
-
     playAudio() {
         const audioPromise = this.audio.play()
         if (audioPromise !== undefined) {
@@ -467,8 +465,6 @@ export class Prototype extends Component {
                             </img>
                         </div>
                         }
-                        
-
 
                         <div className={this.state.start}>
                             <div className="box4">
@@ -497,18 +493,15 @@ export class Prototype extends Component {
                             
                         </div>
 
-
                         {
                         (this.state.engineToggled) && 
                             <p className={"speed " + this.state.start}>{this.state.speed} MPH</p>
                         }
-                        
 
                         <div className={this.state.start}>
                             <button className="mainMenu btn btn-danger" onClick={this.mainMenu}>Change Scenario</button>
                             <button className="reset btn btn-danger" onClick={this.resetScreen}>Reset</button>
                         </div>
-
                     </div>
                     <div className="expansion"></div>
                     <div className="row">
