@@ -6,7 +6,7 @@
 - Lukas Richters
 
 ## Website Link
-https://pbas-prototype-cse-870.herokuapp.com/
+https://pbas-prototype-cse-870.herokuapp.com/PBAS/Prototype
 
 #
 

@@ -161,24 +161,85 @@
     visibility: hidden !important;
 }
 
-.start-background {
+.defaultBackground {
     width: 1200px;
     height: 900px;
     z-index: 100 !important;
     position: absolute;
-    background-image: url(./assets/Prototype/prototypev1start.png);
 }
 
-.pbas-background {
-    background-image: url(./assets/Prototype/prototypev1dry.png);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: absolute;
-    width: 1200px;
-    height: 900px;
-    z-index: 2;
+.scenarioStart {
+    background: url(./assets/Prototype/prototypev1LoadingPage.png) no-repeat 70% 0%;
 }
+
+.scenarioBegin {
+    background: url(./assets/Prototype/prototypevBegin.png) no-repeat 70% 0%;
+}
+
+.scenariobackupComplete {
+    background: url(./assets/Prototype/backupComplete.png) no-repeat 70% 0%;
+}
+
+.scenario1backup1 {
+    background: url(./assets/Prototype/backup1.png) no-repeat 70% 0%;
+}
+
+.scenario1backup2 {
+    background: url(./assets/Prototype/backup2.png) no-repeat 70% 0%;
+}
+
+.scenario1backup3 {
+    background: url(./assets/Prototype/backup3.png) no-repeat 70% 0%;
+}
+
+.scenario1backup4 {
+    background: url(./assets/Prototype/backup4.png) no-repeat 70% 0%;
+}
+
+.scenario1backup5 {
+    background: url(./assets/Prototype/backup5.png) no-repeat 70% 0%;
+}
+
+.scenario2object1 {
+    background: url(./assets/Prototype/object1.png) no-repeat 70% 0%;
+}
+
+.scenario2object2 {
+    background: url(./assets/Prototype/object2.png) no-repeat 70% 0%;
+}
+
+.scenario2object3 {
+    background: url(./assets/Prototype/object3.png) no-repeat 70% 0%;
+}
+
+.scenario2object4 {
+    background: url(./assets/Prototype/object4.png) no-repeat 70% 0%;
+}
+
+.scenario2object5 {
+    background: url(./assets/Prototype/object5.png) no-repeat 70% 0%;
+}
+
+.scenario4 {
+    background: url(./assets/Prototype/prototypev1Maintenance.png) no-repeat 70% 0%;
+}
+
+.scenario5 {
+    background: url(./assets/Prototype/prototypev1Dirt.png) no-repeat 70% 0%;
+}
+
+.scenarioWash {
+    background: url(./assets/Prototype/prototypev1Wash.png) no-repeat 70% 0%;
+}
+
+.scenarioUpdating {
+    background: url(./assets/Prototype/prototypev1Updating.png) no-repeat 70% 0%;
+}
+
+.scenarioUpdated {
+    background: url(./assets/Prototype/prototypev1UpdateComplete.png) no-repeat 70% 0%;
+}
+
 
 .moveProt {
     margin-left: 20em;
@@ -210,9 +271,9 @@
 }
 
 .speed {
-    left: 20.6em;
-    top: 12.8em;
-    font-size: 24px;
+    left: 25.3em;
+    top: 15em;
+    font-size: 20px;
     color: #fff;
     position: absolute;
 }
@@ -240,43 +301,47 @@
     position: absolute;
 }
 
-.torque {
+.scenario {
     position: absolute;
-    left: 48em;
+    bottom: -0.5em;
+    left: 0.5em;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+}
+
+.activeSafety {
+    position: absolute;
+    left: 0.4em;
+    bottom: 5.4em;
     font-size: 20px;
     font-weight: 500;
     color: white;
-    /* -webkit-text-stroke: 0.3px white;
-    -webkit-text-fill-color: black; */
 }
 
-.driverTorque {
+.odc {
     position: absolute;
-    left: 48em;
-    top: 1.2em;
+    left: 0.4em;
+    bottom: 0.9em;
     font-size: 20px;
     font-weight: 500;
     color: white;
-    /* -webkit-text-stroke: 0.3px white;
-    -webkit-text-fill-color: black; */
 }
 
-.wheelangle {
+.csm {
     position: absolute;
-    left: 48em;
-    top: 2.4em;
+    left: 0.4em;
+    bottom: 2.4em;
     font-size: 20px;
     font-weight: 500;
     color: white;
-    /* -webkit-text-stroke: 0.3px white;
-    -webkit-text-fill-color: black; */
 }
 
-.mode {
+.automaticBraking {
     position: absolute;
-    left: 53.4em;
-    top: 4.1em;
-    font-size: 18px;
+    left: 0.4em;
+    bottom: 3.9em;
+    font-size: 20px;
     font-weight: 500;
     color: white;
 }
@@ -294,10 +359,53 @@
     width: 10em;
 }
 
+.update {
+    position: absolute;
+    left: 59.5em;
+    top: 25em;
+    height: 2em;
+    width: 10em;
+}
+
+.mainMenu {
+    position: absolute;
+    left: 64.5em;
+    top: 50.5em;
+    width: 10em;
+}
+
 .engine {
     position: absolute;
     left: 65.5em;
     top: 23.5em;
+    width: 6em;
+    font-size: 12px;
+    border-radius: 50%;
+}
+
+.reverse {
+    position: absolute;
+    left: 82.5em;
+    top: 60em;
+    width: 6em;
+    font-size: 12px;
+    border-radius: 50%;
+}
+
+.gas {
+    position: absolute;
+    left: 50em;
+    top: 60em;
+    width: 4em;
+    height: 6em;
+    font-size: 12px;
+    border-radius: 10%;
+}
+
+.washer {
+    position: absolute;
+    left: 60em;
+    top: 30em;
     width: 6em;
     font-size: 12px;
     border-radius: 50%;
@@ -319,6 +427,46 @@
     text-align: center;
     font-size: 48px;
     font-weight: 700;
+}
+
+.warningCollisionWarning {
+    color: red;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.warningCollision {
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.warningCollision2 {
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.scenario-text {
+    color: white;
+    position: absolute;
+    left: 225px;
+    top: 16em;
+    width: 27em;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.scenario-select {
+    position: absolute;
+    left: 300px;
+    top: 25em;
+    width: 30em;
+    font-size: 20px;
 }
 
 
@@ -407,25 +555,6 @@
     opacity: 0.9;
 }
 
-.box2 {
-    position: absolute;
-    left: 59em;
-    top: 0;
-    background-color: #282828;
-    opacity: 0.9;
-    width: 16em;
-    height: 6.5em;
-    z-index: 0;
-}
-
-.speedlimit {
-    position: absolute;
-    left: 70em;
-    top: 7em;
-    width: 70px;
-    z-index: 0;
-}
-
 .box3 {
     position: absolute;
     left: 0em;
@@ -440,11 +569,22 @@
 .box4 {
     position: absolute;
     left: 0em;
-    top: 49.75em;
+    bottom: 0em;
     background-color: #282828;
     opacity: 0.9;
-    width: 11em;
-    height: 6.5em;
+    width: 33em;
+    height: 10em;
+    z-index: 0;
+}
+
+.box5 {
+    position: absolute;
+    left: 30%;
+    bottom: 50%;
+    background-color: #282828;
+    opacity: 0.9;
+    width: 33em;
+    height: 8em;
     z-index: 0;
 }
 
